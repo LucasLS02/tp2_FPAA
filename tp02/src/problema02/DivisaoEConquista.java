@@ -6,8 +6,8 @@ public class DivisaoEConquista {
             return a[fim] - a[inicio];
         } else {
             int meio = (fim + inicio) / 2;
-            int eSoma = somatorio(a, inicio, meio); // soma lado esquerdo
-            int dSoma = somatorio(a, meio + 1, fim); // soma lado direito
+            int eSoma = somatorio(a, inicio, meio);
+            int dSoma = somatorio(a, meio + 1, fim);
 
             return eSoma - dSoma;
         }
