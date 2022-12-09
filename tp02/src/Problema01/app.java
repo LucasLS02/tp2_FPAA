@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class app {
 
-    static String meuCaminho = "./tp02/src/Problema01/inputs/";
+    static String meuCaminho = "C:/Users/celfa/OneDrive/Documentos/GitHub/tp2_FPAA/tp02/src/Problema01/inputs/";
 
     public static void main(String[] args) {
 

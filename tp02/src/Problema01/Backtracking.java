@@ -1,24 +1,31 @@
 package Problema01;
 
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.IntSummaryStatistics;
+import java.util.LinkedHashMap;
 
 public class Backtracking {
 
     public static boolean compararResultados(Map<Integer, Map<Integer, Integer>> comparar, Map<Integer, Map<Integer, Integer>> atual) {
         IntSummaryStatistics atualEstatisticas = atual.values().stream().mapToInt(c -> c.values().stream().mapToInt(a -> a).sum()).summaryStatistics();
         IntSummaryStatistics compararEstatisticas = comparar.values().stream().mapToInt(c -> c.values().stream().mapToInt(a -> a).sum()).summaryStatistics();
+        if(atualEstatisticas.getMax() == 0) {
+            return true;
+        }
         return atualEstatisticas.getMax() - atualEstatisticas.getMin() >
             compararEstatisticas.getMax() - compararEstatisticas.getMin();
     }
 
-    public static boolean poda(Map<Integer, Map<Integer, Integer>> caminhoes,
-    int caminhaoAtual, Map<Integer, Map<Integer, Integer>> resultadoAtual, double coeficiente, int valorRota) {
+    public static boolean poda(Map<Integer, Map<Integer, Integer>> caminhoes, int caminhaoAtual, Map<Integer, Integer> rotas,
+            Map<Integer, Map<Integer, Integer>> resultadoAtual, double coeficiente, int valorRota) {
+        IntSummaryStatistics estatisticas = caminhoes.values().stream().mapToInt(a -> a.values().stream().mapToInt(b -> b).sum()).summaryStatistics();
         int quilometragemCaminhao = caminhoes.get(caminhaoAtual).values().stream().mapToInt(a -> a).sum();
         return quilometragemCaminhao <= coeficiente &&
-        (resultadoAtual.values().stream().mapToInt(a -> a.values().stream().mapToInt(b -> b).sum()).max().orElse(Integer.MAX_VALUE) >=
-        quilometragemCaminhao + valorRota);
+        Math.abs(estatisticas.getMax() - (quilometragemCaminhao + valorRota)) <= rotas.values().stream().mapToInt(a -> a).max().orElse(0);
     }
 
     public static void inserirValores(Map<Integer, Map<Integer, Integer>> caminhoes, Map<Integer, Map<Integer, Integer>> resultado) {
@@ -30,23 +37,16 @@ public class Backtracking {
         });
     }
 
-    public static boolean solucaoCompromisso(double coeficiente, Map<Integer, Map<Integer, Integer>> resultadoAtual) {
-        double porcentagemCoeficiente = 0.25;
-        IntSummaryStatistics atualEstatisticas = resultadoAtual.values().stream().mapToInt(c -> c.values().stream().mapToInt(a -> a).sum()).summaryStatistics();
-        return atualEstatisticas.getMax() - (coeficiente * porcentagemCoeficiente) <= coeficiente &&
-        atualEstatisticas.getMin() + (coeficiente * porcentagemCoeficiente) >= coeficiente;
-    }
-
     public static void backTracking( Map<Integer, Map<Integer, Integer>> caminhoes,
             Map<Integer, Integer> rotasDisponiveis, double coeficiente, int rotaAtual,  Map<Integer, Map<Integer, Integer>> resultadoAtual) {
-        if (rotaAtual <= rotasDisponiveis.size() && !solucaoCompromisso(coeficiente, resultadoAtual)) {
+        if (rotaAtual <= rotasDisponiveis.size()) {
             for(int caminhaoAtual = 0; caminhaoAtual < caminhoes.size(); caminhaoAtual++) {
-                if(poda(caminhoes, caminhaoAtual, resultadoAtual, coeficiente, rotasDisponiveis.get(rotaAtual))) {
+                if(poda(caminhoes, caminhaoAtual, rotasDisponiveis, resultadoAtual, coeficiente, rotasDisponiveis.get(rotaAtual))) {
                     caminhoes.get(caminhaoAtual).put(rotaAtual, rotasDisponiveis.get(rotaAtual));
                     backTracking(caminhoes, rotasDisponiveis, coeficiente, rotaAtual + 1, resultadoAtual);
                     caminhoes.get(caminhaoAtual).remove(rotaAtual);
                 }
-            } 
+            }
         }
         if(rotasDisponiveis.size() < rotaAtual) {
             if(compararResultados(caminhoes, resultadoAtual)) {
@@ -72,13 +72,17 @@ public class Backtracking {
             caminhoes.put(j, new HashMap<>());
             resultados.put(j, new HashMap<>());
         }
-        resultados.get(0).put(1, Integer.MAX_VALUE);
+
+        // Sorting the routes by the value of the route.
+        Map<Integer, Integer> rotasOrdenadas = rotas.entrySet().stream()
+                .sorted(Collections.reverseOrder(Entry.comparingByValue()))
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
 
         // Calculating the average weight of the routes.
         double coeficientePesoMedio = Math
                 .ceil(((rotas.values().stream().mapToInt(x -> x).sum()) / (float) numCaminhoes));
 
-        backTracking(caminhoes, rotas, coeficientePesoMedio, 1, resultados);
+        backTracking(caminhoes, rotasOrdenadas, coeficientePesoMedio, 1, resultados);
 
         return resultados;
 
