@@ -19,13 +19,14 @@ public class LeitorDeArquivo {
      * @return A map with the values of the file.s
      */
 
-    public static Map<Integer, List<Integer>> lerArquivo(String caminho) {
+    static int ano = 1;
 
+    public static Map<Integer, List<Integer>> lerArquivo(String caminho) {
+        
         Map<Integer, List<Integer>> valores = new HashMap<>();
         
         try (BufferedReader buffRead = new BufferedReader(new FileReader(caminho))) {
             String linha = buffRead.readLine();
-            int ano = 1;
             
             while (linha != null) {
                 String[] rotas = linha.split(";");
