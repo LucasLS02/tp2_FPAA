@@ -54,13 +54,19 @@ public class app {
             // System.out.println("");
             // System.out.println("-----------------------------------------------------");
 
+            Long tempoInicial = System.currentTimeMillis();
+
             Map<Integer, Map<Integer, Integer>> test = Backtracking.distribuirRotas(valoresDeTeste);
 
             System.out.println("-----------------------------------------------------");
             System.out.println(test);
             System.out.println("-----------------------------------------------------");
             test.values().stream().forEach(a -> System.out.println(a.values().stream().mapToInt(b -> b).sum()));
-            System.out.println("");
+            System.out.println();
+
+            Long tempoFinal = System.currentTimeMillis();
+
+            System.out.println("Tempo de execução(em milisegundos): " + (tempoFinal - tempoInicial));
         }
 
     }

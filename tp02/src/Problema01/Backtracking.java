@@ -25,7 +25,7 @@ public class Backtracking {
         IntSummaryStatistics estatisticas = caminhoes.values().stream().mapToInt(a -> a.values().stream().mapToInt(b -> b).sum()).summaryStatistics();
         int quilometragemCaminhao = caminhoes.get(caminhaoAtual).values().stream().mapToInt(a -> a).sum();
         return quilometragemCaminhao <= coeficiente &&
-        Math.abs(estatisticas.getMax() - (quilometragemCaminhao + valorRota)) <= rotas.values().stream().mapToInt(a -> a).max().orElse(0);
+        estatisticas.getMax() - (quilometragemCaminhao + valorRota) <= rotas.values().stream().mapToInt(a -> a).max().orElse(0);
     }
 
     public static void inserirValores(Map<Integer, Map<Integer, Integer>> caminhoes, Map<Integer, Map<Integer, Integer>> resultado) {
@@ -39,18 +39,20 @@ public class Backtracking {
 
     public static void backTracking( Map<Integer, Map<Integer, Integer>> caminhoes,
             Map<Integer, Integer> rotasDisponiveis, double coeficiente, int rotaAtual,  Map<Integer, Map<Integer, Integer>> resultadoAtual) {
-        if (rotaAtual <= rotasDisponiveis.size()) {
-            for(int caminhaoAtual = 0; caminhaoAtual < caminhoes.size(); caminhaoAtual++) {
-                if(poda(caminhoes, caminhaoAtual, rotasDisponiveis, resultadoAtual, coeficiente, rotasDisponiveis.get(rotaAtual))) {
-                    caminhoes.get(caminhaoAtual).put(rotaAtual, rotasDisponiveis.get(rotaAtual));
-                    backTracking(caminhoes, rotasDisponiveis, coeficiente, rotaAtual + 1, resultadoAtual);
-                    caminhoes.get(caminhaoAtual).remove(rotaAtual);
+        if(resultadoAtual.values().stream().mapToInt(c -> c.values().stream().mapToInt(a -> a).sum()).sum() == 0) {
+            if (rotaAtual <= rotasDisponiveis.size()) {
+                for(int caminhaoAtual = 0; caminhaoAtual < caminhoes.size(); caminhaoAtual++) {
+                    if(poda(caminhoes, caminhaoAtual, rotasDisponiveis, resultadoAtual, coeficiente, rotasDisponiveis.get(rotaAtual))) {
+                        caminhoes.get(caminhaoAtual).put(rotaAtual, rotasDisponiveis.get(rotaAtual));
+                        backTracking(caminhoes, rotasDisponiveis, coeficiente, rotaAtual + 1, resultadoAtual);
+                        caminhoes.get(caminhaoAtual).remove(rotaAtual);
+                    }
                 }
             }
-        }
-        if(rotasDisponiveis.size() < rotaAtual) {
-            if(compararResultados(caminhoes, resultadoAtual)) {
-                inserirValores(caminhoes, resultadoAtual);
+            if(rotasDisponiveis.size() < rotaAtual) {
+                if(compararResultados(caminhoes, resultadoAtual)) {
+                    inserirValores(caminhoes, resultadoAtual);
+                }
             }
         }
     }
