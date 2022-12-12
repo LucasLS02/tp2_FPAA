@@ -29,10 +29,10 @@ public class LeitorDeArquivo {
             String linha = buffRead.readLine();
             
             while (linha != null) {
-                String[] rotas = linha.split(";");
+                String[] dias = linha.split(";");
                 List<Integer> temperaturas = new LinkedList<Integer>();
                 
-                for (String num : rotas) {
+                for (String num : dias) {
                     temperaturas.add(Integer.parseInt(num));
                 }
                 
