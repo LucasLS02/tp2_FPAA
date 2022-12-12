@@ -23,15 +23,21 @@ public class app {
 
         valoresTemperaturas.forEach((key, value) -> {
 
+            List<Integer> arr = new ArrayList<Integer>();
+
+            for (int i = 0; i < value.size() - 2; i++) {
+                arr.add(value.get(i + 1) - value.get(i));
+            }
+
             System.out.println("");
             DivisaoEConquista d1 = new DivisaoEConquista();
-            d1.divisaoEConquista(value, 0, value.size() - 1);
+            d1.divisaoEConquista(arr, 0, arr.size() - 1);
             System.out.println("Ano: " + key);
             System.out.println(d1.getMaiorPeriodo());
             System.out.println("-----------------------------------------------------");
             System.out.println("");
 
-            value.stream().forEach(num -> todasTemperaturas.add(num));
+            arr.stream().forEach(num -> todasTemperaturas.add(num));
 
         });
 
@@ -49,15 +55,21 @@ public class app {
 
         valoresTemperaturasExtremas.forEach((key, value) -> {
 
+            List<Integer> arr = new ArrayList<Integer>();
+
+            for (int i = 0; i < value.size() - 2; i++) {
+                arr.add(value.get(i + 1) - value.get(i));
+            }
+
             System.out.println("");
             DivisaoEConquista d3 = new DivisaoEConquista();
-            d3.divisaoEConquista(value, 0, value.size() - 1);
+            d3.divisaoEConquista(arr, 0, arr.size() - 1);
             System.out.println("Ano: " + (key == 10 ? key / 2 : key % 5));
             System.out.println(d3.getMaiorPeriodo());
             System.out.println("-----------------------------------------------------");
             System.out.println("");
 
-            value.stream().forEach(num -> todasTemperaturas.add(num));
+            arr.stream().forEach(num -> todasTemperaturas.add(num));
 
         });
 

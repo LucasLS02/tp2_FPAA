@@ -38,16 +38,18 @@ public class DivisaoEConquista {
         if (test > maiorSoma) {
             maiorSoma = test;
             if ((eSoma + dSoma) > Math.max(eSoma, dSoma)) {
-                maiorPeriodo = String.format("Período: %d-%d\nAcumulo temperatura: %d", eLast, dLast, maiorSoma);
+                maiorPeriodo = String.format("Período: %s - %s\nAcumulo temperatura: %d",
+                        new Data().geraData(eFirst + 1), new Data().geraData(dLast + 2), maiorSoma);
             } else if (eSoma > dSoma) {
-                maiorPeriodo = String.format("Período: %d-%d\nAcumulo temperatura: %d", eFirst, eLast, maiorSoma);
+                maiorPeriodo = String.format("Período: %s - %s\nAcumulo temperatura: %d",
+                        new Data().geraData(eFirst + 1), new Data().geraData(eLast + 2), maiorSoma);
             } else {
-                maiorPeriodo = String.format("Período: %d-%d\nAcumulo temperatura: %d", dFirst, dLast, maiorSoma);
+                maiorPeriodo = String.format("Período: %s - %s\nAcumulo temperatura: %d",
+                        new Data().geraData(dFirst + 1), new Data().geraData(dLast + 2), maiorSoma);
             }
         }
 
-        return Math.max(eSoma + dSoma,
-                Math.max(eSoma, dSoma));
+        return test;
     }
 
     public int divisaoEConquista(List<Integer> arr, int inicio, int fim) {
