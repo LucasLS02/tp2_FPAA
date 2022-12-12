@@ -3,5 +3,5 @@ Integrantes:
 
 Carlos Aquino,
 Gabriel Mendonça,
-Lucas Lage,
+Lucas Lage e
 Matheus Brandão
